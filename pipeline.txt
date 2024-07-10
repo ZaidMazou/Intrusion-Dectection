@@ -1,0 +1,18 @@
+input {
+  file {
+    path => "/var/log/snort/alert"
+    start_position => "beginning"
+  }
+}
+filter {
+  grok {
+    match => { "message" => "%{GREEDYDATA:features}" }
+  }
+}
+output {
+  http {
+    url => "http://localhost:5000/predict"
+    http_method => "post"
+    format => "json"
+  }
+}
